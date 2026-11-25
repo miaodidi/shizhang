@@ -31,3 +31,16 @@ test('transfer, category and theme settings work',async({page})=>{
  await page.locator('[data-tab=settings]').click();await page.locator('[data-action=categories]').click();await page.locator('[name=name]').fill('自定义分类');await page.getByRole('button',{name:'新增分类',exact:true}).click();await expect(page.getByText('自定义分类',{exact:true})).toBeVisible();await page.locator('.close-modal').click();
  await page.locator('[data-theme=dark]').last().click();await expect(page.locator('html')).toHaveAttribute('data-theme','dark');await page.screenshot({path:'screenshots/settings-dark.png',fullPage:true});
 });
+test('navigation drag selects on release, and settings check runs each visit',async({page,context})=>{
+ let checks=0;context.on('request',request=>{if(request.url().includes('/version.json?')&&request.serviceWorker())checks++;});
+ await page.goto('/?demo=1');const start=await page.locator('nav [data-tab=home]').boundingBox(),end=await page.locator('nav [data-tab=bills]').boundingBox();
+ await page.mouse.move(start.x+start.width/2,start.y+start.height/2);await page.mouse.down();await page.mouse.move(end.x+end.width/2,end.y+end.height/2,{steps:12});
+ await expect(page.locator('nav')).toHaveClass(/dragging/);await expect(page.locator('nav [data-tab=home]')).toHaveAttribute('aria-current','page');await page.mouse.up();await expect(page.locator('nav [data-tab=bills]')).toHaveAttribute('aria-current','page');
+ await page.waitForTimeout(550);await page.locator('nav [data-tab=settings]').click();await expect.poll(()=>checks).toBe(1);await expect(page.locator('#update-panel')).toContainText('当前是最新版本');
+ await page.locator('nav [data-tab=flow]').click();await page.locator('nav [data-tab=settings]').click();await expect.poll(()=>checks).toBe(2);
+});
+test('chart only renders nonempty series with correct average lines',async({page})=>{
+ await page.goto('/');await page.locator('[aria-label="记一笔"]').click();await page.locator('[name=amount]').fill('60');await page.getByRole('button',{name:'记好了',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);
+ await page.locator('nav [data-tab=bills]').click();await expect(page.locator('[data-series=expense]')).toHaveCount(1);await expect(page.locator('[data-series=income]')).toHaveCount(0);await expect(page.locator('[data-average=expense]')).toHaveCount(1);await expect(page.locator('[data-average=income]')).toHaveCount(0);await expect(page.locator('.chart-averages')).toContainText('¥10.00');
+ await page.locator('nav [data-tab=home]').click();await page.locator('[data-type=income]').click();await page.locator('[name=amount]').fill('120');await page.getByRole('button',{name:'记好了',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);await page.locator('nav [data-tab=bills]').click();await expect(page.locator('[data-series=income]')).toHaveCount(1);await expect(page.locator('[data-average]')).toHaveCount(2);
+});

@@ -1,6 +1,6 @@
 # 拾账 · 独立 PWA 设计预览
 
-参考 [Subfolio 的 App Store 页面](https://apps.apple.com/us/app/subfolio-track-your-subs/id6829737968) 的四页布局，以原创网页实现浅灰紫背景、大圆角卡片、叠放账户卡及玻璃质感导航。首页替换为个人记账。图标由 SVG 绘制，未使用原应用图片资源。
+参考 [Subfolio 的 App Store 页面](https://apps.apple.com/us/app/subfolio-track-your-subs/id6829737968) 的四页布局，以原创网页实现浅灰紫背景、大圆角卡片、叠放账户卡及支持拖动切换的玻璃质感导航。首页替换为个人记账。图标由 SVG 绘制，未使用原应用图片资源。
 
 ## 本地使用
 
@@ -25,7 +25,7 @@ npm run dev
 - 账单新增、编辑、删除；嵌套详情可返回原列表。
 - 完整 JSON 导入导出（兼容轻账备份及带密码的轻账备份）、CSV 导出。
 - 粘贴截图识别文字，本地规则解析；可自行配置 DeepSeek API。调用前会提示文字与分类将发送到 DeepSeek，密钥只保存在本地。示例模式不调用 AI 服务。
-- 构建版本支持 Service Worker 离线访问。新版本资源安装后，下次完全关闭应用再打开生效。
+- 构建版本支持 Service Worker 离线访问。进入设置自动联网检查版本；新版本下载后点击“立即更新”，保留本地账本。
 
 ## 预览范围
 
