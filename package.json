@@ -1,0 +1,16 @@
+{
+  "name": "shizhang",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 4174",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 4174",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "vite": "^7.1.0",
+    "@playwright/test": "^1.56.0"
+  }
+}
