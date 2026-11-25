@@ -3,7 +3,7 @@ import http from 'node:http';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 test('a waiting release activates only on update click and preserves the ledger',async({page})=>{
- let latest=false;const version='2026.11.25.3',previous='2026.11.25.2';
+ let latest=false;const version='2026.11.25.4',previous='2026.11.25.3';
  const server=http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://localhost'),file=url.pathname==='/'?'index.html':url.pathname.slice(1);let data=await fs.readFile(path.join(process.cwd(),'dist',file));const type=file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.html')?'text/html':file.endsWith('.json')?'application/json':file.endsWith('.png')?'image/png':'text/plain';if(!latest&&['text/javascript','text/html','application/json'].includes(type)){let text=data.toString().replaceAll(version,previous);if(file==='sw.js')text=text.replace("CACHE='shizhang-","CACHE='shizhang-previous-");data=Buffer.from(text);}res.writeHead(200,{'Content-Type':type,'Cache-Control':'no-store'});res.end(data);}catch{res.writeHead(404);res.end();}});
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
  try{

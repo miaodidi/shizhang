@@ -1,6 +1,6 @@
 import {defineConfig} from 'vite';
 import {createHash} from 'node:crypto';
-const version='2026.11.25.3';
+const version='2026.11.25.4';
 export default defineConfig({base:'./',define:{__APP_VERSION__:JSON.stringify(version)},plugins:[{name:'offline',generateBundle(_,bundle){
 this.emitFile({type:'asset',fileName:'version.json',source:JSON.stringify({version})});
 const revision=createHash('sha256').update(Object.keys(bundle).sort().join('|')).digest('hex').slice(0,12);
