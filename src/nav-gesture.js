@@ -9,6 +9,6 @@ export function enableNavDrag(onSelect){
   g.nav.style.setProperty('--drag-x',`${x}px`);const buttons=[...g.nav.querySelectorAll('button')];const index=Math.max(0,Math.min(3,Math.floor((e.clientX-rect.left-6)/width)));g.target=buttons[index];buttons.forEach(b=>b.classList.toggle('drag-target',b===g.target));
  });
  document.addEventListener('pointerup',e=>{if(!gesture||gesture.id!==e.pointerId)return;const g=gesture;const rect=g.nav.getBoundingClientRect();const inside=e.clientY>=rect.top-20&&e.clientY<=rect.bottom+20&&e.clientX>=rect.left-20&&e.clientX<=rect.right+20;reset();if(g.dragged){suppressUntil=performance.now()+500;if(inside)onSelect(g.target.dataset.tab);}});
- document.addEventListener('pointercancel',reset);document.addEventListener('lostpointercapture',reset);
+ document.addEventListener('pointercancel',reset);document.addEventListener('lostpointercapture',e=>{if(gesture?.dragged&&e.target===gesture.nav)reset();});
  document.addEventListener('click',e=>{if(performance.now()<suppressUntil&&e.target.closest('.bottom-nav')){e.preventDefault();e.stopImmediatePropagation();}},true);
 }
