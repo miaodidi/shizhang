@@ -1,4 +1,5 @@
 name: Publish PWA
+# fresh-pages-deploy
 on:
   push:
     branches: [main]
